@@ -15,7 +15,6 @@ Do not be destructive or do anything that would get the owner of the system into
 Have fun!
 `;
 const MODEL_NAME = "gemini-1.5-flash";
-// const API_KEY = "AIzaSyCQGem2-sBVKv3tv0cAq5VQi6Z0EuMbi6s";
 import { exec } from 'child_process';
 import util from 'util';
 
