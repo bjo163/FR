@@ -1,0 +1,3137 @@
+TAP version 14
+# Subtest: User API Tests
+    ok 1 - Registration should return status 201
+    ok 2 - Registration should return user ID
+    not ok 3 - Login should return a token
+      ---
+      at:
+        fileName: test\auth.test.js
+        lineNumber: 91
+        columnNumber: 5
+        typeName: Test
+      stack: |
+        Test.<anonymous> (test/auth.test.js:91:5)
+      source: "  // Test Login\r
+      
+        \  const token = await testLogin(username);\r
+      
+        \  t.ok(token, 'Login should return a token');\r
+      
+        ----^
+      
+        \r
+      
+        \  // Test Get User\n"
+      ...
+    
+    not ok 4 - Request failed with status code 401
+      ---
+      stack: >
+        settle (node_modules/axios/lib/core/settle.js:19:12)
+      
+        IncomingMessage.handleStreamEnd
+        (node_modules/axios/lib/adapters/http.js:599:11)
+      
+        Axios.request (node_modules/axios/lib/core/Axios.js:45:41)
+      
+        async testGetUser (test/auth.test.js:30:20)
+      
+        async Test.<anonymous> (test/auth.test.js:94:27)
+      at:
+        fileName: node_modules\axios\lib\core\settle.js
+        lineNumber: 19
+        columnNumber: 12
+        functionName: settle
+      type: AxiosError
+      code: ERR_BAD_REQUEST
+      config: &a5
+        transitional:
+          silentJSONParsing: true
+          forcedJSONParsing: true
+          clarifyTimeoutError: false
+        adapter:
+          - xhr
+          - http
+          - fetch
+        transformRequest:
+          - !class |-
+            function transformRequest(data, headers) {
+                const contentType = headers.getContentType() || '';
+                const hasJSONContentType = contentType.indexOf('application/json') > -1;
+                const isObjectPayload = utils.isObject(data);
+      
+                if (isObjectPayload && utils.isHTMLForm(data)) {
+                  data = new FormData(data);
+                }
+      
+                const isFormData = utils.isFormData(data);
+      
+                if (isFormData) {
+                  return hasJSONContentType ? JSON.stringify(formDataToJSON(data)) : data;
+                }
+      
+                if (utils.isArrayBuffer(data) ||
+                  utils.isBuffer(data) ||
+                  utils.isStream(data) ||
+                  utils.isFile(data) ||
+                  utils.isBlob(data) ||
+                  utils.isReadableStream(data)
+                ) {
+                  return data;
+                }
+                if (utils.isArrayBufferView(data)) {
+                  return data.buffer;
+                }
+                if (utils.isURLSearchParams(data)) {
+                  headers.setContentType('application/x-www-form-urlencoded;charset=utf-8', false);
+                  return data.toString();
+                }
+      
+                let isFileList;
+      
+                if (isObjectPayload) {
+                  if (contentType.indexOf('application/x-www-form-urlencoded') > -1) {
+                    return toURLEncodedForm(data, this.formSerializer).toString();
+                  }
+      
+                  if ((isFileList = utils.isFileList(data)) || contentType.indexOf('multipart/form-data') > -1) {
+                    const _FormData = this.env && this.env.FormData;
+      
+                    return toFormData(
+                      isFileList ? {'files[]': data} : data,
+                      _FormData && new _FormData(),
+                      this.formSerializer
+                    );
+                  }
+                }
+      
+                if (isObjectPayload || hasJSONContentType ) {
+                  headers.setContentType('application/json', false);
+                  return stringifySafely(data);
+                }
+      
+                return data;
+              }
+        transformResponse:
+          - !class |-
+            function transformResponse(data) {
+                const transitional = this.transitional || defaults.transitional;
+                const forcedJSONParsing = transitional && transitional.forcedJSONParsing;
+                const JSONRequested = this.responseType === 'json';
+      
+                if (utils.isResponse(data) || utils.isReadableStream(data)) {
+                  return data;
+                }
+      
+                if (data && utils.isString(data) && ((forcedJSONParsing && !this.responseType) || JSONRequested)) {
+                  const silentJSONParsing = transitional && transitional.silentJSONParsing;
+                  const strictJSONParsing = !silentJSONParsing && JSONRequested;
+      
+                  try {
+                    return JSON.parse(data);
+                  } catch (e) {
+                    if (strictJSONParsing) {
+                      if (e.name === 'SyntaxError') {
+                        throw AxiosError.from(e, AxiosError.ERR_BAD_RESPONSE, this, null, this.response);
+                      }
+                      throw e;
+                    }
+                  }
+                }
+      
+                return data;
+              }
+        timeout: 0
+        xsrfCookieName: XSRF-TOKEN
+        xsrfHeaderName: X-XSRF-TOKEN
+        maxContentLength: -1
+        maxBodyLength: -1
+        env:
+          FormData: !class |-
+            function FormData(options) {
+              if (!(this instanceof FormData)) {
+                return new FormData(options);
+              }
+      
+              this._overheadLength = 0;
+              this._valueLength = 0;
+              this._valuesToMeasure = [];
+      
+              CombinedStream.call(this);
+      
+              options = options || {};
+              for (var option in options) {
+                this[option] = options[option];
+              }
+            }
+          Blob: !class "class Blob {\r
+      
+            \  /**\r
+      
+            \   * @typedef {string|ArrayBuffer|ArrayBufferView|Blob} SourcePart\r
+      
+            \   */\r
+      
+            \r
+      
+            \  /**\r
+      
+            \   * @param {SourcePart[]} [sources]\r
+      
+            \   * @param {{\r
+      
+            \   *   endings? : string,\r
+      
+            \   *   type? : string,\r
+      
+            \   * }} [options]\r
+      
+            \   * @constructs {Blob}\r
+      
+            \   */\r
+      
+            \  constructor(sources = [], options) {\r
+      
+            \    if (sources === null ||\r
+      
+            \        typeof sources[SymbolIterator] !== 'function' ||\r
+      
+            \        typeof sources === 'string') {\r
+      
+            \      throw new ERR_INVALID_ARG_TYPE('sources', 'a sequence', sources);\r
+      
+            \    }\r
+      
+            \    validateDictionary(options, 'options');\r
+      
+            \    let {\r
+      
+            \      type = '',\r
+      
+            \      endings = 'transparent',\r
+      
+            \    } = options ?? kEmptyObject;\r
+      
+            \r
+      
+            \    endings = `${endings}`;\r
+      
+            \    if (endings !== 'transparent' && endings !== 'native')\r
+      
+            \      throw new ERR_INVALID_ARG_VALUE('options.endings', endings);\r
+      
+            \r
+      
+            \    let length = 0;\r
+      
+            \    const sources_ = ArrayFrom(sources, (source) => {\r
+      
+            \      const { 0: len, 1: src } = getSource(source, endings);\r
+      
+            \      length += len;\r
+      
+            \      return src;\r
+      
+            \    });\r
+      
+            \r
+      
+            \    if (length > kMaxLength)\r
+      
+            \      throw new ERR_BUFFER_TOO_LARGE(kMaxLength);\r
+      
+            \r
+      
+            \    this[kHandle] = _createBlob(sources_, length);\r
+      
+            \    this[kLength] = length;\r
+      
+            \r
+      
+            \    type = `${type}`;\r
+      
+            \    this[kType] = RegExpPrototypeExec(disallowedTypeCharacters, type) !==
+            null ?\r
+      
+            \      '' : StringPrototypeToLowerCase(type);\r
+      
+            \r
+      
+            \    // eslint-disable-next-line no-constructor-return\r
+      
+            \    return makeTransferable(this);\r
+      
+            \  }\r
+      
+            \r
+      
+            \  [kInspect](depth, options) {\r
+      
+            \    if (depth < 0)\r
+      
+            \      return this;\r
+      
+            \r
+      
+            \    const opts = {\r
+      
+            \      ...options,\r
+      
+            \      depth: options.depth == null ? null : options.depth - 1,\r
+      
+            \    };\r
+      
+            \r
+      
+            \    return `Blob ${inspect({\r
+      
+            \      size: this.size,\r
+      
+            \      type: this.type,\r
+      
+            \    }, opts)}`;\r
+      
+            \  }\r
+      
+            \r
+      
+            \  [kClone]() {\r
+      
+            \    if (this[kNotCloneable]) {\r
+      
+            \      // We do not currently allow file-backed Blobs to be cloned or
+            passed across\r
+      
+            \      // worker threads.\r
+      
+            \      throw new ERR_INVALID_STATE.TypeError('File-backed Blobs are not
+            cloneable');\r
+      
+            \    }\r
+      
+            \    const handle = this[kHandle];\r
+      
+            \    const type = this[kType];\r
+      
+            \    const length = this[kLength];\r
+      
+            \    return {\r
+      
+            \      data: { handle, type, length },\r
+      
+            \      deserializeInfo: 'internal/blob:ClonedBlob',\r
+      
+            \    };\r
+      
+            \  }\r
+      
+            \r
+      
+            \  [kDeserialize]({ handle, type, length }) {\r
+      
+            \    this[kHandle] = handle;\r
+      
+            \    this[kType] = type;\r
+      
+            \    this[kLength] = length;\r
+      
+            \  }\r
+      
+            \r
+      
+            \  /**\r
+      
+            \   * @readonly\r
+      
+            \   * @type {string}\r
+      
+            \   */\r
+      
+            \  get type() {\r
+      
+            \    if (!isBlob(this))\r
+      
+            \      throw new ERR_INVALID_THIS('Blob');\r
+      
+            \    return this[kType];\r
+      
+            \  }\r
+      
+            \r
+      
+            \  /**\r
+      
+            \   * @readonly\r
+      
+            \   * @type {number}\r
+      
+            \   */\r
+      
+            \  get size() {\r
+      
+            \    if (!isBlob(this))\r
+      
+            \      throw new ERR_INVALID_THIS('Blob');\r
+      
+            \    return this[kLength];\r
+      
+            \  }\r
+      
+            \r
+      
+            \  /**\r
+      
+            \   * @param {number} [start]\r
+      
+            \   * @param {number} [end]\r
+      
+            \   * @param {string} [contentType]\r
+      
+            \   * @returns {Blob}\r
+      
+            \   */\r
+      
+            \  slice(start = 0, end = this[kLength], contentType = '') {\r
+      
+            \    if (!isBlob(this))\r
+      
+            \      throw new ERR_INVALID_THIS('Blob');\r
+      
+            \    if (start < 0) {\r
+      
+            \      start = MathMax(this[kLength] + start, 0);\r
+      
+            \    } else {\r
+      
+            \      start = MathMin(start, this[kLength]);\r
+      
+            \    }\r
+      
+            \    start |= 0;\r
+      
+            \r
+      
+            \    if (end < 0) {\r
+      
+            \      end = MathMax(this[kLength] + end, 0);\r
+      
+            \    } else {\r
+      
+            \      end = MathMin(end, this[kLength]);\r
+      
+            \    }\r
+      
+            \    end |= 0;\r
+      
+            \r
+      
+            \    contentType = `${contentType}`;\r
+      
+            \    if (RegExpPrototypeExec(disallowedTypeCharacters, contentType) !==
+            null) {\r
+      
+            \      contentType = '';\r
+      
+            \    } else {\r
+      
+            \      contentType = StringPrototypeToLowerCase(contentType);\r
+      
+            \    }\r
+      
+            \r
+      
+            \    const span = MathMax(end - start, 0);\r
+      
+            \r
+      
+            \    return createBlob(\r
+      
+            \      this[kHandle].slice(start, start + span),\r
+      
+            \      span,\r
+      
+            \      contentType);\r
+      
+            \  }\r
+      
+            \r
+      
+            \  /**\r
+      
+            \   * @returns {Promise<ArrayBuffer>}\r
+      
+            \   */\r
+      
+            \  arrayBuffer() {\r
+      
+            \    if (!isBlob(this))\r
+      
+            \      return PromiseReject(new ERR_INVALID_THIS('Blob'));\r
+      
+            \r
+      
+            \    const { promise, resolve, reject } = createDeferredPromise();\r
+      
+            \    const reader = this[kHandle].getReader();\r
+      
+            \    const buffers = [];\r
+      
+            \    const readNext = () => {\r
+      
+            \      reader.pull((status, buffer) => {\r
+      
+            \        if (status === 0) {\r
+      
+            \          // EOS, concat & resolve\r
+      
+            \          // buffer should be undefined here\r
+      
+            \          resolve(concat(buffers));\r
+      
+            \          return;\r
+      
+            \        } else if (status < 0) {\r
+      
+            \          // The read could fail for many different reasons when
+            reading\r
+      
+            \          // from a non-memory resident blob part (e.g. file-backed
+            blob).\r
+      
+            \          // The error details the system error code.\r
+      
+            \          const error = lazyDOMException('The blob could not be read',
+            'NotReadableError');\r
+      
+            \          reject(error);\r
+      
+            \          return;\r
+      
+            \        }\r
+      
+            \        if (buffer !== undefined)\r
+      
+            \          buffers.push(buffer);\r
+      
+            \        queueMicrotask(() => readNext());\r
+      
+            \      });\r
+      
+            \    };\r
+      
+            \    readNext();\r
+      
+            \    return promise;\r
+      
+            \  }\r
+      
+            \r
+      
+            \  /**\r
+      
+            \   * @returns {Promise<string>}\r
+      
+            \   */\r
+      
+            \  async text() {\r
+      
+            \    if (!isBlob(this))\r
+      
+            \      throw new ERR_INVALID_THIS('Blob');\r
+      
+            \r
+      
+            \    dec ??= new TextDecoder();\r
+      
+            \r
+      
+            \    return dec.decode(await this.arrayBuffer());\r
+      
+            \  }\r
+      
+            \r
+      
+            \  /**\r
+      
+            \   * @returns {ReadableStream}\r
+      
+            \   */\r
+      
+            \  stream() {\r
+      
+            \    if (!isBlob(this))\r
+      
+            \      throw new ERR_INVALID_THIS('Blob');\r
+      
+            \r
+      
+            \    const reader = this[kHandle].getReader();\r
+      
+            \    return new lazyReadableStream({\r
+      
+            \      type: 'bytes',\r
+      
+            \      start(c) {\r
+      
+            \        // There really should only be one read at a time so using an\r
+      
+            \        // array here is purely defensive.\r
+      
+            \        this.pendingPulls = [];\r
+      
+            \      },\r
+      
+            \      pull(c) {\r
+      
+            \        const { promise, resolve, reject } = createDeferredPromise();\r
+      
+            \        this.pendingPulls.push({ resolve, reject });\r
+      
+            \        const readNext = () => {\r
+      
+            \          reader.pull((status, buffer) => {\r
+      
+            \            // If pendingPulls is empty here, the stream had to have\r
+      
+            \            // been canceled, and we don't really care about the
+            result.\r
+      
+            \            // We can simply exit.\r
+      
+            \            if (this.pendingPulls.length === 0) {\r
+      
+            \              return;\r
+      
+            \            }\r
+      
+            \            if (status === 0) {\r
+      
+            \              // EOS\r
+      
+            \              c.close();\r
+      
+            \              // This is to signal the end for byob readers\r
+      
+            \              // see https://streams.spec.whatwg.org/#example-rbs-pull\r
+      
+            \              c.byobRequest?.respond(0);\r
+      
+            \              const pending = this.pendingPulls.shift();\r
+      
+            \              pending.resolve();\r
+      
+            \              return;\r
+      
+            \            } else if (status < 0) {\r
+      
+            \              // The read could fail for many different reasons when
+            reading\r
+      
+            \              // from a non-memory resident blob part (e.g. file-backed
+            blob).\r
+      
+            \              // The error details the system error code.\r
+      
+            \              const error = lazyDOMException('The blob could not be
+            read', 'NotReadableError');\r
+      
+            \              const pending = this.pendingPulls.shift();\r
+      
+            \              c.error(error);\r
+      
+            \              pending.reject(error);\r
+      
+            \              return;\r
+      
+            \            }\r
+      
+            \            // ReadableByteStreamController.enqueue errors if we submit a
+            0-length\r
+      
+            \            // buffer. We need to check for that here.\r
+      
+            \            if (buffer !== undefined && buffer.byteLength !== 0) {\r
+      
+            \              c.enqueue(new Uint8Array(buffer));\r
+      
+            \            }\r
+      
+            \            // We keep reading until we either reach EOS, some error, or
+            we\r
+      
+            \            // hit the flow rate of the stream (c.desiredSize).\r
+      
+            \            queueMicrotask(() => {\r
+      
+            \              if (c.desiredSize < 0) {\r
+      
+            \                // A manual backpressure check.\r
+      
+            \                if (this.pendingPulls.length !== 0) {\r
+      
+            \                  // A case of waiting pull finished (= not yet
+            canceled)\r
+      
+            \                  const pending = this.pendingPulls.shift();\r
+      
+            \                  pending.resolve();\r
+      
+            \                }\r
+      
+            \                return;\r
+      
+            \              }\r
+      
+            \              readNext();\r
+      
+            \            });\r
+      
+            \          });\r
+      
+            \        };\r
+      
+            \        readNext();\r
+      
+            \        return promise;\r
+      
+            \      },\r
+      
+            \      cancel(reason) {\r
+      
+            \        // Reject any currently pending pulls here.\r
+      
+            \        for (const pending of this.pendingPulls) {\r
+      
+            \          pending.reject(reason);\r
+      
+            \        }\r
+      
+            \        this.pendingPulls = [];\r
+      
+            \      },\r
+      
+            \    // We set the highWaterMark to 0 because we do not want the stream
+            to\r
+      
+            \    // start reading immediately on creation. We want it to wait until
+            read\r
+      
+            \    // is called.\r
+      
+            \    }, new CountQueuingStrategy({ highWaterMark: 0 }));\r
+      
+            \  }\r
+      
+            }"
+        validateStatus: !class |-
+          function validateStatus(status) {
+              return status >= 200 && status < 300;
+            }
+        headers:
+          Accept: application/json, text/plain, */*
+          Authorization: Bearer undefined
+          User-Agent: axios/1.7.3
+          Accept-Encoding: gzip, compress, deflate, br
+        method: get
+        url: http://localhost:3000/users/21
+      request: &a2
+        _events: !nullobject
+          abort: !class |-
+            function (arg1, arg2, arg3) {
+                this._redirectable.emit(event, arg1, arg2, arg3);
+              }
+          aborted: !class |-
+            function (arg1, arg2, arg3) {
+                this._redirectable.emit(event, arg1, arg2, arg3);
+              }
+          connect: !class |-
+            function (arg1, arg2, arg3) {
+                this._redirectable.emit(event, arg1, arg2, arg3);
+              }
+          error: !class |-
+            function (arg1, arg2, arg3) {
+                this._redirectable.emit(event, arg1, arg2, arg3);
+              }
+          socket: !class |-
+            function (arg1, arg2, arg3) {
+                this._redirectable.emit(event, arg1, arg2, arg3);
+              }
+          timeout: !class |-
+            function (arg1, arg2, arg3) {
+                this._redirectable.emit(event, arg1, arg2, arg3);
+              }
+          finish: !class "function requestOnFinish() {\r
+      
+            \  const req = this;\r
+      
+            \r
+      
+            \  if (req.shouldKeepAlive && req._ended)\r
+      
+            \    responseKeepAlive(req);\r
+      
+            }"
+        _eventsCount: 7
+        outputData: []
+        outputSize: 0
+        writable: true
+        destroyed: true
+        _last: true
+        chunkedEncoding: false
+        shouldKeepAlive: true
+        maxRequestsOnConnectionReached: false
+        _defaultKeepAlive: true
+        useChunkedEncodingByDefault: false
+        sendDate: false
+        _removedConnection: false
+        _removedContLen: false
+        _removedTE: false
+        strictContentLength: false
+        _contentLength: 0
+        _hasBody: true
+        _trailer: ""
+        finished: true
+        _headerSent: true
+        _closed: true
+        socket: &a1
+          connecting: false
+          _hadError: false
+          _parent: null
+          _host: localhost
+          _closeAfterHandlingError: false
+          _events:
+            close: !class "function onClose(err) {\r
+      
+              \    debug('CLIENT socket onClose');\r
+      
+              \    // This is the only place where sockets get removed from the
+              Agent.\r
+      
+              \    // If you want to remove a socket from the pool, just close it.\r
+      
+              \    // All socket errors end in a close event anyway.\r
+      
+              \    agent.totalSocketCount--;\r
+      
+              \    agent.removeSocket(s, options);\r
+      
+              \  }"
+            error: !function |-
+              "bound onceWrapper"
+              function () { [native code] }
+            end: !class "function onReadableStreamEnd() {\r
+      
+              \  if (!this.allowHalfOpen) {\r
+      
+              \    this.write = writeAfterFIN;\r
+      
+              \  }\r
+      
+              }"
+            free: !class "function onFree() {\r
+      
+              \    debug('CLIENT socket onFree');\r
+      
+              \    agent.emit('free', s, options);\r
+      
+              \  }"
+            timeout: !class "function onTimeout() {\r
+      
+              \    debug('CLIENT socket onTimeout');\r
+      
+              \r
+      
+              \    // Destroy if in free list.\r
+      
+              \    // TODO(ronag): Always destroy, even if not in free list.\r
+      
+              \    const sockets = agent.freeSockets;\r
+      
+              \    if (ArrayPrototypeSome(ObjectKeys(sockets), (name) =>\r
+      
+              \      ArrayPrototypeIncludes(sockets[name], s),\r
+      
+              \    )) {\r
+      
+              \      return s.destroy();\r
+      
+              \    }\r
+      
+              \  }"
+            agentRemove: !class "function onRemove() {\r
+      
+              \    // We need this function for cases like HTTP 'upgrade'\r
+      
+              \    // (defined by WebSockets) where we need to remove a socket from
+              the\r
+      
+              \    // pool because it'll be locked up indefinitely\r
+      
+              \    debug('CLIENT socket onRemove');\r
+      
+              \    agent.totalSocketCount--;\r
+      
+              \    agent.removeSocket(s, options);\r
+      
+              \    s.removeListener('close', onClose);\r
+      
+              \    s.removeListener('free', onFree);\r
+      
+              \    s.removeListener('timeout', onTimeout);\r
+      
+              \    s.removeListener('agentRemove', onRemove);\r
+      
+              \  }"
+          _readableState:
+            highWaterMark: 16384
+            buffer: []
+            bufferIndex: 0
+            length: 0
+            pipes: []
+            awaitDrainWriters: null
+          _writableState:
+            highWaterMark: 16384
+            length: 0
+            corked: 0
+            onwrite: !function |-
+              "bound onwrite"
+              function () { [native code] }
+            writelen: 0
+            bufferedIndex: 0
+            pendingcb: 0
+          allowHalfOpen: false
+          _eventsCount: 6
+          _sockname: null
+          _pendingData: null
+          _pendingEncoding: ""
+          server: null
+          _server: null
+          timeout: 5000
+          parser: null
+          _httpMessage: null
+          autoSelectFamilyAttemptedAddresses:
+            - ::1:3000
+        _header: "GET /users/21 HTTP/1.1\r
+      
+          Accept: application/json, text/plain, */*\r
+      
+          Authorization: Bearer undefined\r
+      
+          User-Agent: axios/1.7.3\r
+      
+          Accept-Encoding: gzip, compress, deflate, br\r
+      
+          Host: localhost:3000\r
+      
+          Connection: keep-alive\r
+      
+          \r\n"
+        _keepAliveTimeout: 0
+        _onPendingData: !function |-
+          "nop"
+          () => {}
+        agent: &a3
+          _events: !nullobject
+            free: !function "\"\"
+      
+              (socket, options) => {\r
+      
+              \    const name = this.getName(options);\r
+      
+              \    debug('agent.on(free)', name);\r
+      
+              \r
+      
+              \    // TODO(ronag): socket.destroy(err) might have been called\r
+      
+              \    // before coming here and have an 'error' scheduled. In the\r
+      
+              \    // case of socket.destroy() below this 'error' has no handler\r
+      
+              \    // and could cause unhandled exception.\r
+      
+              \r
+      
+              \    if (!socket.writable) {\r
+      
+              \      socket.destroy();\r
+      
+              \      return;\r
+      
+              \    }\r
+      
+              \r
+      
+              \    const requests = this.requests[name];\r
+      
+              \    if (requests && requests.length) {\r
+      
+              \      const req = ArrayPrototypeShift(requests);\r
+      
+              \      const reqAsyncRes = req[kRequestAsyncResource];\r
+      
+              \      if (reqAsyncRes) {\r
+      
+              \        // Run request within the original async context.\r
+      
+              \        reqAsyncRes.runInAsyncScope(() => {\r
+      
+              \          asyncResetHandle(socket);\r
+      
+              \          setRequestSocket(this, req, socket);\r
+      
+              \        });\r
+      
+              \        req[kRequestAsyncResource] = null;\r
+      
+              \      } else {\r
+      
+              \        setRequestSocket(this, req, socket);\r
+      
+              \      }\r
+      
+              \      if (requests.length === 0) {\r
+      
+              \        delete this.requests[name];\r
+      
+              \      }\r
+      
+              \      return;\r
+      
+              \    }\r
+      
+              \r
+      
+              \    // If there are no pending requests, then put it in\r
+      
+              \    // the freeSockets pool, but only if we're allowed to do so.\r
+      
+              \    const req = socket._httpMessage;\r
+      
+              \    if (!req || !req.shouldKeepAlive || !this.keepAlive) {\r
+      
+              \      socket.destroy();\r
+      
+              \      return;\r
+      
+              \    }\r
+      
+              \r
+      
+              \    const freeSockets = this.freeSockets[name] || [];\r
+      
+              \    const freeLen = freeSockets.length;\r
+      
+              \    let count = freeLen;\r
+      
+              \    if (this.sockets[name])\r
+      
+              \      count += this.sockets[name].length;\r
+      
+              \r
+      
+              \    if (this.totalSocketCount > this.maxTotalSockets ||\r
+      
+              \        count > this.maxSockets ||\r
+      
+              \        freeLen >= this.maxFreeSockets ||\r
+      
+              \        !this.keepSocketAlive(socket)) {\r
+      
+              \      socket.destroy();\r
+      
+              \      return;\r
+      
+              \    }\r
+      
+              \r
+      
+              \    this.freeSockets[name] = freeSockets;\r
+      
+              \    socket[async_id_symbol] = -1;\r
+      
+              \    socket._httpMessage = null;\r
+      
+              \    this.removeSocket(socket, options);\r
+      
+              \r
+      
+              \    socket.once('error', freeSocketErrorListener);\r
+      
+              \    ArrayPrototypePush(freeSockets, socket);\r
+      
+              \  }"
+            newListener: !class "function maybeEnableKeylog(eventName) {\r
+      
+              \  if (eventName === 'keylog') {\r
+      
+              \    this.removeListener('newListener', maybeEnableKeylog);\r
+      
+              \    // Future sockets will listen on keylog at creation.\r
+      
+              \    const agent = this;\r
+      
+              \    this[kOnKeylog] = function onkeylog(keylog) {\r
+      
+              \      agent.emit('keylog', keylog, this);\r
+      
+              \    };\r
+      
+              \    // Existing sockets will start listening on keylog now.\r
+      
+              \    const sockets = ObjectValues(this.sockets);\r
+      
+              \    for (let i = 0; i < sockets.length; i++) {\r
+      
+              \      sockets[i].on('keylog', this[kOnKeylog]);\r
+      
+              \    }\r
+      
+              \  }\r
+      
+              }"
+          _eventsCount: 2
+          defaultPort: 80
+          protocol: "http:"
+          options: !nullobject
+            keepAlive: true
+            scheduling: lifo
+            timeout: 5000
+            noDelay: true
+            path: null
+          requests: !nullobject {}
+          sockets: !nullobject {}
+          freeSockets: !nullobject
+            "localhost:3000:":
+              - *a1
+          keepAliveMsecs: 1000
+          keepAlive: true
+          maxSockets: .inf
+          maxFreeSockets: 256
+          scheduling: lifo
+          maxTotalSockets: .inf
+          totalSocketCount: 1
+        method: GET
+        path: /users/21
+        _ended: true
+        res:
+          _events:
+            error: !class |-
+              function handleStreamError(err) {
+                        if (req.destroyed) return;
+                        reject(AxiosError.from(err, null, config, lastRequest));
+                      }
+            data: !class |-
+              function handleStreamData(chunk) {
+                        responseBuffer.push(chunk);
+                        totalResponseBytes += chunk.length;
+      
+                        // make sure the content length is not over the maxContentLength if specified
+                        if (config.maxContentLength > -1 && totalResponseBytes > config.maxContentLength) {
+                          // stream.destroy() emit aborted event before calling reject() on Node.js v16
+                          rejected = true;
+                          responseStream.destroy();
+                          reject(new AxiosError('maxContentLength size of ' + config.maxContentLength + ' exceeded',
+                            AxiosError.ERR_BAD_RESPONSE, config, lastRequest));
+                        }
+                      }
+            end:
+              - !class "function responseOnEnd() {\r
+      
+                \  const req = this.req;\r
+      
+                \  const socket = req.socket;\r
+      
+                \r
+      
+                \  if (socket) {\r
+      
+                \    if (req.timeoutCb) socket.removeListener('timeout',
+                emitRequestTimeout);\r
+      
+                \    socket.removeListener('timeout', responseOnTimeout);\r
+      
+                \  }\r
+      
+                \r
+      
+                \  req._ended = true;\r
+      
+                \r
+      
+                \  if (!req.shouldKeepAlive) {\r
+      
+                \    if (socket.writable) {\r
+      
+                \      debug('AGENT socket.destroySoon()');\r
+      
+                \      if (typeof socket.destroySoon === 'function')\r
+      
+                \        socket.destroySoon();\r
+      
+                \      else\r
+      
+                \        socket.end();\r
+      
+                \    }\r
+      
+                \    assert(!socket.writable);\r
+      
+                \  } else if (req.writableFinished && !this.aborted) {\r
+      
+                \    assert(req.finished);\r
+      
+                \    // We can assume `req.finished` means all data has been written
+                since:\r
+      
+                \    // - `'responseOnEnd'` means we have been assigned a socket.\r
+      
+                \    // - when we have a socket we write directly to it without
+                buffering.\r
+      
+                \    // - `req.finished` means `end()` has been called and no further
+                data.\r
+      
+                \    //   can be written\r
+      
+                \    // In addition, `req.writableFinished` means all data written has
+                been\r
+      
+                \    // accepted by the kernel. (i.e. the `req.socket` is
+                drained).Without\r
+      
+                \    // this constraint, we may assign a non drained socket to a
+                request.\r
+      
+                \    responseKeepAlive(req);\r
+      
+                \  }\r
+      
+                }"
+              - !class |-
+                function handleStreamEnd() {
+                          try {
+                            let responseData = responseBuffer.length === 1 ? responseBuffer[0] : Buffer.concat(responseBuffer);
+                            if (responseType !== 'arraybuffer') {
+                              responseData = responseData.toString(responseEncoding);
+                              if (!responseEncoding || responseEncoding === 'utf8') {
+                                responseData = utils.stripBOM(responseData);
+                              }
+                            }
+                            response.data = responseData;
+                          } catch (err) {
+                            return reject(AxiosError.from(err, null, config, response.request, response));
+                          }
+                          settle(resolve, reject, response);
+                        }
+            aborted: !class |-
+              function handlerStreamAborted() {
+                        if (rejected) {
+                          return;
+                        }
+      
+                        const err = new AxiosError(
+                          'maxContentLength size of ' + config.maxContentLength + ' exceeded',
+                          AxiosError.ERR_BAD_RESPONSE,
+                          config,
+                          lastRequest
+                        );
+                        responseStream.destroy(err);
+                        reject(err);
+                      }
+          _readableState:
+            highWaterMark: 16384
+            buffer: []
+            bufferIndex: 0
+            length: 0
+            pipes: []
+            awaitDrainWriters: null
+          socket: null
+          httpVersionMajor: 1
+          httpVersionMinor: 1
+          httpVersion: "1.1"
+          complete: true
+          rawHeaders:
+            - Access-Control-Allow-Origin
+            - "*"
+            - content-type
+            - application/json; charset=utf-8
+            - content-length
+            - "154"
+            - Date
+            - Wed, 07 Aug 2024 05:54:33 GMT
+            - Connection
+            - keep-alive
+            - Keep-Alive
+            - timeout=72
+          rawTrailers: []
+          aborted: false
+          upgrade: false
+          url: ""
+          method: null
+          statusCode: 401
+          statusMessage: Unauthorized
+          client: *a1
+          _consuming: false
+          _dumped: false
+          req: *a2
+          _eventsCount: 4
+          responseUrl: http://localhost:3000/users/21
+          redirects: &a4 []
+        aborted: false
+        timeoutCb: null
+        upgradeOrConnect: false
+        parser: null
+        maxHeadersCount: null
+        reusedSocket: true
+        host: localhost
+        protocol: "http:"
+        _redirectable:
+          _events:
+            error: !class |-
+              function handleRequestError(err) {
+                    // @todo remove
+                    // if (req.aborted && err.code !== AxiosError.ERR_FR_TOO_MANY_REDIRECTS) return;
+                    reject(AxiosError.from(err, null, config, req));
+                  }
+            response: !class |-
+              function handleResponse(res) {
+                    if (req.destroyed) return;
+      
+                    const streams = [res];
+      
+                    const responseLength = +res.headers['content-length'];
+      
+                    if (onDownloadProgress || maxDownloadRate) {
+                      const transformStream = new AxiosTransformStream({
+                        maxRate: utils.toFiniteNumber(maxDownloadRate)
+                      });
+      
+                      onDownloadProgress && transformStream.on('progress', flushOnFinish(
+                        transformStream,
+                        progressEventDecorator(
+                          responseLength,
+                          progressEventReducer(asyncDecorator(onDownloadProgress), true, 3)
+                        )
+                      ));
+      
+                      streams.push(transformStream);
+                    }
+      
+                    // decompress the response body transparently if required
+                    let responseStream = res;
+      
+                    // return the last request in case of redirects
+                    const lastRequest = res.req || req;
+      
+                    // if decompress disabled we should not decompress
+                    if (config.decompress !== false && res.headers['content-encoding']) {
+                      // if no content, but headers still say that it is encoded,
+                      // remove the header not confuse downstream operations
+                      if (method === 'HEAD' || res.statusCode === 204) {
+                        delete res.headers['content-encoding'];
+                      }
+      
+                      switch ((res.headers['content-encoding'] || '').toLowerCase()) {
+                      /*eslint default-case:0*/
+                      case 'gzip':
+                      case 'x-gzip':
+                      case 'compress':
+                      case 'x-compress':
+                        // add the unzipper to the body stream processing pipeline
+                        streams.push(zlib.createUnzip(zlibOptions));
+      
+                        // remove the content-encoding in order to not confuse downstream operations
+                        delete res.headers['content-encoding'];
+                        break;
+                      case 'deflate':
+                        streams.push(new ZlibHeaderTransformStream());
+      
+                        // add the unzipper to the body stream processing pipeline
+                        streams.push(zlib.createUnzip(zlibOptions));
+      
+                        // remove the content-encoding in order to not confuse downstream operations
+                        delete res.headers['content-encoding'];
+                        break;
+                      case 'br':
+                        if (isBrotliSupported) {
+                          streams.push(zlib.createBrotliDecompress(brotliOptions));
+                          delete res.headers['content-encoding'];
+                        }
+                      }
+                    }
+      
+                    responseStream = streams.length > 1 ? stream.pipeline(streams, utils.noop) : streams[0];
+      
+                    const offListeners = stream.finished(responseStream, () => {
+                      offListeners();
+                      onFinished();
+                    });
+      
+                    const response = {
+                      status: res.statusCode,
+                      statusText: res.statusMessage,
+                      headers: new AxiosHeaders(res.headers),
+                      config,
+                      request: lastRequest
+                    };
+      
+                    if (responseType === 'stream') {
+                      response.data = responseStream;
+                      settle(resolve, reject, response);
+                    } else {
+                      const responseBuffer = [];
+                      let totalResponseBytes = 0;
+      
+                      responseStream.on('data', function handleStreamData(chunk) {
+                        responseBuffer.push(chunk);
+                        totalResponseBytes += chunk.length;
+      
+                        // make sure the content length is not over the maxContentLength if specified
+                        if (config.maxContentLength > -1 && totalResponseBytes > config.maxContentLength) {
+                          // stream.destroy() emit aborted event before calling reject() on Node.js v16
+                          rejected = true;
+                          responseStream.destroy();
+                          reject(new AxiosError('maxContentLength size of ' + config.maxContentLength + ' exceeded',
+                            AxiosError.ERR_BAD_RESPONSE, config, lastRequest));
+                        }
+                      });
+      
+                      responseStream.on('aborted', function handlerStreamAborted() {
+                        if (rejected) {
+                          return;
+                        }
+      
+                        const err = new AxiosError(
+                          'maxContentLength size of ' + config.maxContentLength + ' exceeded',
+                          AxiosError.ERR_BAD_RESPONSE,
+                          config,
+                          lastRequest
+                        );
+                        responseStream.destroy(err);
+                        reject(err);
+                      });
+      
+                      responseStream.on('error', function handleStreamError(err) {
+                        if (req.destroyed) return;
+                        reject(AxiosError.from(err, null, config, lastRequest));
+                      });
+      
+                      responseStream.on('end', function handleStreamEnd() {
+                        try {
+                          let responseData = responseBuffer.length === 1 ? responseBuffer[0] : Buffer.concat(responseBuffer);
+                          if (responseType !== 'arraybuffer') {
+                            responseData = responseData.toString(responseEncoding);
+                            if (!responseEncoding || responseEncoding === 'utf8') {
+                              responseData = utils.stripBOM(responseData);
+                            }
+                          }
+                          response.data = responseData;
+                        } catch (err) {
+                          return reject(AxiosError.from(err, null, config, response.request, response));
+                        }
+                        settle(resolve, reject, response);
+                      });
+                    }
+      
+                    emitter.once('abort', err => {
+                      if (!responseStream.destroyed) {
+                        responseStream.emit('error', err);
+                        responseStream.destroy();
+                      }
+                    });
+                  }
+            socket: !class |-
+              function handleRequestSocket(socket) {
+                    // default interval of sending ack packet is 1 minute
+                    socket.setKeepAlive(true, 1000 * 60);
+                  }
+          _writableState:
+            highWaterMark: 16384
+            length: 0
+            corked: 0
+            onwrite: !function |-
+              "bound onwrite"
+              function () { [native code] }
+            writelen: 0
+            bufferedIndex: 0
+            pendingcb: 0
+          _options:
+            maxRedirects: 21
+            maxBodyLength: .inf
+            protocol: "http:"
+            path: /users/21
+            method: GET
+            headers: !nullobject
+              Accept: application/json, text/plain, */*
+              Authorization: Bearer undefined
+              User-Agent: axios/1.7.3
+              Accept-Encoding: gzip, compress, deflate, br
+            agents: {}
+            beforeRedirect: !class |-
+              function dispatchBeforeRedirect(options, responseDetails) {
+                if (options.beforeRedirects.proxy) {
+                  options.beforeRedirects.proxy(options);
+                }
+                if (options.beforeRedirects.config) {
+                  options.beforeRedirects.config(options, responseDetails);
+                }
+              }
+            beforeRedirects:
+              proxy: !class |-
+                function beforeRedirect(redirectOptions) {
+                    // Configure proxy for redirected request, passing the original config proxy to apply
+                    // the exact same logic as if the redirected request was performed by axios directly.
+                    setProxy(redirectOptions, configProxy, redirectOptions.href);
+                  }
+            hostname: localhost
+            port: "3000"
+            nativeProtocols:
+              "http:":
+                _connectionListener: !class "function connectionListener(socket) {\r
+      
+                  \  defaultTriggerAsyncIdScope(\r
+      
+                  \    getOrSetAsyncId(socket), connectionListenerInternal, this,
+                  socket,\r
+      
+                  \  );\r
+      
+                  }"
+                METHODS:
+                  - ACL
+                  - BIND
+                  - CHECKOUT
+                  - CONNECT
+                  - COPY
+                  - DELETE
+                  - GET
+                  - HEAD
+                  - LINK
+                  - LOCK
+                  - M-SEARCH
+                  - MERGE
+                  - MKACTIVITY
+                  - MKCALENDAR
+                  - MKCOL
+                  - MOVE
+                  - NOTIFY
+                  - OPTIONS
+                  - PATCH
+                  - POST
+                  - PROPFIND
+                  - PROPPATCH
+                  - PURGE
+                  - PUT
+                  - REBIND
+                  - REPORT
+                  - SEARCH
+                  - SOURCE
+                  - SUBSCRIBE
+                  - TRACE
+                  - UNBIND
+                  - UNLINK
+                  - UNLOCK
+                  - UNSUBSCRIBE
+                STATUS_CODES:
+                  "100": Continue
+                  "101": Switching Protocols
+                  "102": Processing
+                  "103": Early Hints
+                  "200": OK
+                  "201": Created
+                  "202": Accepted
+                  "203": Non-Authoritative Information
+                  "204": No Content
+                  "205": Reset Content
+                  "206": Partial Content
+                  "207": Multi-Status
+                  "208": Already Reported
+                  "226": IM Used
+                  "300": Multiple Choices
+                  "301": Moved Permanently
+                  "302": Found
+                  "303": See Other
+                  "304": Not Modified
+                  "305": Use Proxy
+                  "307": Temporary Redirect
+                  "308": Permanent Redirect
+                  "400": Bad Request
+                  "401": Unauthorized
+                  "402": Payment Required
+                  "403": Forbidden
+                  "404": Not Found
+                  "405": Method Not Allowed
+                  "406": Not Acceptable
+                  "407": Proxy Authentication Required
+                  "408": Request Timeout
+                  "409": Conflict
+                  "410": Gone
+                  "411": Length Required
+                  "412": Precondition Failed
+                  "413": Payload Too Large
+                  "414": URI Too Long
+                  "415": Unsupported Media Type
+                  "416": Range Not Satisfiable
+                  "417": Expectation Failed
+                  "418": I'm a Teapot
+                  "421": Misdirected Request
+                  "422": Unprocessable Entity
+                  "423": Locked
+                  "424": Failed Dependency
+                  "425": Too Early
+                  "426": Upgrade Required
+                  "428": Precondition Required
+                  "429": Too Many Requests
+                  "431": Request Header Fields Too Large
+                  "451": Unavailable For Legal Reasons
+                  "500": Internal Server Error
+                  "501": Not Implemented
+                  "502": Bad Gateway
+                  "503": Service Unavailable
+                  "504": Gateway Timeout
+                  "505": HTTP Version Not Supported
+                  "506": Variant Also Negotiates
+                  "507": Insufficient Storage
+                  "508": Loop Detected
+                  "509": Bandwidth Limit Exceeded
+                  "510": Not Extended
+                  "511": Network Authentication Required
+                Agent: !class "function Agent(options) {\r
+      
+                  \  if (!(this instanceof Agent))\r
+      
+                  \    return new Agent(options);\r
+      
+                  \r
+      
+                  \  FunctionPrototypeCall(EventEmitter, this);\r
+      
+                  \r
+      
+                  \  this.defaultPort = 80;\r
+      
+                  \  this.protocol = 'http:';\r
+      
+                  \r
+      
+                  \  this.options = { __proto__: null, ...options };\r
+      
+                  \r
+      
+                  \  if (this.options.noDelay === undefined)\r
+      
+                  \    this.options.noDelay = true;\r
+      
+                  \r
+      
+                  \  // Don't confuse net and make it think that we're connecting to a
+                  pipe\r
+      
+                  \  this.options.path = null;\r
+      
+                  \  this.requests = { __proto__: null };\r
+      
+                  \  this.sockets = { __proto__: null };\r
+      
+                  \  this.freeSockets = { __proto__: null };\r
+      
+                  \  this.keepAliveMsecs = this.options.keepAliveMsecs || 1000;\r
+      
+                  \  this.keepAlive = this.options.keepAlive || false;\r
+      
+                  \  this.maxSockets = this.options.maxSockets ||
+                  Agent.defaultMaxSockets;\r
+      
+                  \  this.maxFreeSockets = this.options.maxFreeSockets || 256;\r
+      
+                  \  this.scheduling = this.options.scheduling || 'lifo';\r
+      
+                  \  this.maxTotalSockets = this.options.maxTotalSockets;\r
+      
+                  \  this.totalSocketCount = 0;\r
+      
+                  \r
+      
+                  \  validateOneOf(this.scheduling, 'scheduling', ['fifo', 'lifo']);\r
+      
+                  \r
+      
+                  \  if (this.maxTotalSockets !== undefined) {\r
+      
+                  \    validateNumber(this.maxTotalSockets, 'maxTotalSockets', 1);\r
+      
+                  \  } else {\r
+      
+                  \    this.maxTotalSockets = Infinity;\r
+      
+                  \  }\r
+      
+                  \r
+      
+                  \  this.on('free', (socket, options) => {\r
+      
+                  \    const name = this.getName(options);\r
+      
+                  \    debug('agent.on(free)', name);\r
+      
+                  \r
+      
+                  \    // TODO(ronag): socket.destroy(err) might have been called\r
+      
+                  \    // before coming here and have an 'error' scheduled. In the\r
+      
+                  \    // case of socket.destroy() below this 'error' has no handler\r
+      
+                  \    // and could cause unhandled exception.\r
+      
+                  \r
+      
+                  \    if (!socket.writable) {\r
+      
+                  \      socket.destroy();\r
+      
+                  \      return;\r
+      
+                  \    }\r
+      
+                  \r
+      
+                  \    const requests = this.requests[name];\r
+      
+                  \    if (requests && requests.length) {\r
+      
+                  \      const req = ArrayPrototypeShift(requests);\r
+      
+                  \      const reqAsyncRes = req[kRequestAsyncResource];\r
+      
+                  \      if (reqAsyncRes) {\r
+      
+                  \        // Run request within the original async context.\r
+      
+                  \        reqAsyncRes.runInAsyncScope(() => {\r
+      
+                  \          asyncResetHandle(socket);\r
+      
+                  \          setRequestSocket(this, req, socket);\r
+      
+                  \        });\r
+      
+                  \        req[kRequestAsyncResource] = null;\r
+      
+                  \      } else {\r
+      
+                  \        setRequestSocket(this, req, socket);\r
+      
+                  \      }\r
+      
+                  \      if (requests.length === 0) {\r
+      
+                  \        delete this.requests[name];\r
+      
+                  \      }\r
+      
+                  \      return;\r
+      
+                  \    }\r
+      
+                  \r
+      
+                  \    // If there are no pending requests, then put it in\r
+      
+                  \    // the freeSockets pool, but only if we're allowed to do so.\r
+      
+                  \    const req = socket._httpMessage;\r
+      
+                  \    if (!req || !req.shouldKeepAlive || !this.keepAlive) {\r
+      
+                  \      socket.destroy();\r
+      
+                  \      return;\r
+      
+                  \    }\r
+      
+                  \r
+      
+                  \    const freeSockets = this.freeSockets[name] || [];\r
+      
+                  \    const freeLen = freeSockets.length;\r
+      
+                  \    let count = freeLen;\r
+      
+                  \    if (this.sockets[name])\r
+      
+                  \      count += this.sockets[name].length;\r
+      
+                  \r
+      
+                  \    if (this.totalSocketCount > this.maxTotalSockets ||\r
+      
+                  \        count > this.maxSockets ||\r
+      
+                  \        freeLen >= this.maxFreeSockets ||\r
+      
+                  \        !this.keepSocketAlive(socket)) {\r
+      
+                  \      socket.destroy();\r
+      
+                  \      return;\r
+      
+                  \    }\r
+      
+                  \r
+      
+                  \    this.freeSockets[name] = freeSockets;\r
+      
+                  \    socket[async_id_symbol] = -1;\r
+      
+                  \    socket._httpMessage = null;\r
+      
+                  \    this.removeSocket(socket, options);\r
+      
+                  \r
+      
+                  \    socket.once('error', freeSocketErrorListener);\r
+      
+                  \    ArrayPrototypePush(freeSockets, socket);\r
+      
+                  \  });\r
+      
+                  \r
+      
+                  \  // Don't emit keylog events unless there is a listener for
+                  them.\r
+      
+                  \  this.on('newListener', maybeEnableKeylog);\r
+      
+                  }"
+                ClientRequest: !class "function ClientRequest(input, options, cb) {\r
+      
+                  \  FunctionPrototypeCall(OutgoingMessage, this);\r
+      
+                  \r
+      
+                  \  if (typeof input === 'string') {\r
+      
+                  \    const urlStr = input;\r
+      
+                  \    input = urlToHttpOptions(new URL(urlStr));\r
+      
+                  \  } else if (isURL(input)) {\r
+      
+                  \    // url.URL instance\r
+      
+                  \    input = urlToHttpOptions(input);\r
+      
+                  \  } else {\r
+      
+                  \    cb = options;\r
+      
+                  \    options = input;\r
+      
+                  \    input = null;\r
+      
+                  \  }\r
+      
+                  \r
+      
+                  \  if (typeof options === 'function') {\r
+      
+                  \    cb = options;\r
+      
+                  \    options = input || kEmptyObject;\r
+      
+                  \  } else {\r
+      
+                  \    options = ObjectAssign(input || {}, options);\r
+      
+                  \  }\r
+      
+                  \r
+      
+                  \  let agent = options.agent;\r
+      
+                  \  const defaultAgent = options._defaultAgent ||
+                  Agent.globalAgent;\r
+      
+                  \  if (agent === false) {\r
+      
+                  \    agent = new defaultAgent.constructor();\r
+      
+                  \  } else if (agent === null || agent === undefined) {\r
+      
+                  \    if (typeof options.createConnection !== 'function') {\r
+      
+                  \      agent = defaultAgent;\r
+      
+                  \    }\r
+      
+                  \    // Explicitly pass through this statement as agent will not be
+                  used\r
+      
+                  \    // when createConnection is provided.\r
+      
+                  \  } else if (typeof agent.addRequest !== 'function') {\r
+      
+                  \    throw new ERR_INVALID_ARG_TYPE('options.agent',\r
+      
+                  \                                   ['Agent-like Object',
+                  'undefined', 'false'],\r
+      
+                  \                                   agent);\r
+      
+                  \  }\r
+      
+                  \  this.agent = agent;\r
+      
+                  \r
+      
+                  \  const protocol = options.protocol || defaultAgent.protocol;\r
+      
+                  \  let expectedProtocol = defaultAgent.protocol;\r
+      
+                  \  if (this.agent && this.agent.protocol)\r
+      
+                  \    expectedProtocol = this.agent.protocol;\r
+      
+                  \r
+      
+                  \  if (options.path) {\r
+      
+                  \    const path = String(options.path);\r
+      
+                  \    if (RegExpPrototypeExec(INVALID_PATH_REGEX, path) !== null) {\r
+      
+                  \      debug('Path contains unescaped characters: \"%s\"', path);\r
+      
+                  \      throw new ERR_UNESCAPED_CHARACTERS('Request path');\r
+      
+                  \    }\r
+      
+                  \  }\r
+      
+                  \r
+      
+                  \  if (protocol !== expectedProtocol) {\r
+      
+                  \    throw new ERR_INVALID_PROTOCOL(protocol, expectedProtocol);\r
+      
+                  \  }\r
+      
+                  \r
+      
+                  \  const defaultPort = options.defaultPort ||\r
+      
+                  \                    (this.agent && this.agent.defaultPort);\r
+      
+                  \r
+      
+                  \  const optsWithoutSignal = { __proto__: null, ...options };\r
+      
+                  \r
+      
+                  \  const port = optsWithoutSignal.port = options.port || defaultPort
+                  || 80;\r
+      
+                  \  const host = optsWithoutSignal.host =
+                  validateHost(options.hostname, 'hostname') ||\r
+      
+                  \                                        validateHost(options.host,
+                  'host') || 'localhost';\r
+      
+                  \r
+      
+                  \  const setHost = (options.setHost === undefined ||
+                  Boolean(options.setHost));\r
+      
+                  \r
+      
+                  \  this.socketPath = options.socketPath;\r
+      
+                  \r
+      
+                  \  if (options.timeout !== undefined)\r
+      
+                  \    this.timeout = getTimerDuration(options.timeout, 'timeout');\r
+      
+                  \r
+      
+                  \  const signal = options.signal;\r
+      
+                  \  if (signal) {\r
+      
+                  \    addAbortSignal(signal, this);\r
+      
+                  \    delete optsWithoutSignal.signal;\r
+      
+                  \  }\r
+      
+                  \  let method = options.method;\r
+      
+                  \  const methodIsString = (typeof method === 'string');\r
+      
+                  \  if (method !== null && method !== undefined && !methodIsString)
+                  {\r
+      
+                  \    throw new ERR_INVALID_ARG_TYPE('options.method', 'string',
+                  method);\r
+      
+                  \  }\r
+      
+                  \r
+      
+                  \  if (methodIsString && method) {\r
+      
+                  \    if (!checkIsHttpToken(method)) {\r
+      
+                  \      throw new ERR_INVALID_HTTP_TOKEN('Method', method);\r
+      
+                  \    }\r
+      
+                  \    method = this.method = StringPrototypeToUpperCase(method);\r
+      
+                  \  } else {\r
+      
+                  \    method = this.method = 'GET';\r
+      
+                  \  }\r
+      
+                  \r
+      
+                  \  const maxHeaderSize = options.maxHeaderSize;\r
+      
+                  \  if (maxHeaderSize !== undefined)\r
+      
+                  \    validateInteger(maxHeaderSize, 'maxHeaderSize', 0);\r
+      
+                  \  this.maxHeaderSize = maxHeaderSize;\r
+      
+                  \r
+      
+                  \  const insecureHTTPParser = options.insecureHTTPParser;\r
+      
+                  \  if (insecureHTTPParser !== undefined) {\r
+      
+                  \    validateBoolean(insecureHTTPParser,
+                  'options.insecureHTTPParser');\r
+      
+                  \  }\r
+      
+                  \r
+      
+                  \  this.insecureHTTPParser = insecureHTTPParser;\r
+      
+                  \r
+      
+                  \  if (options.joinDuplicateHeaders !== undefined) {\r
+      
+                  \    validateBoolean(options.joinDuplicateHeaders,
+                  'options.joinDuplicateHeaders');\r
+      
+                  \  }\r
+      
+                  \r
+      
+                  \  this.joinDuplicateHeaders = options.joinDuplicateHeaders;\r
+      
+                  \r
+      
+                  \  this.path = options.path || '/';\r
+      
+                  \  if (cb) {\r
+      
+                  \    this.once('response', cb);\r
+      
+                  \  }\r
+      
+                  \r
+      
+                  \  if (method === 'GET' ||\r
+      
+                  \      method === 'HEAD' ||\r
+      
+                  \      method === 'DELETE' ||\r
+      
+                  \      method === 'OPTIONS' ||\r
+      
+                  \      method === 'TRACE' ||\r
+      
+                  \      method === 'CONNECT') {\r
+      
+                  \    this.useChunkedEncodingByDefault = false;\r
+      
+                  \  } else {\r
+      
+                  \    this.useChunkedEncodingByDefault = true;\r
+      
+                  \  }\r
+      
+                  \r
+      
+                  \  this._ended = false;\r
+      
+                  \  this.res = null;\r
+      
+                  \  this.aborted = false;\r
+      
+                  \  this.timeoutCb = null;\r
+      
+                  \  this.upgradeOrConnect = false;\r
+      
+                  \  this.parser = null;\r
+      
+                  \  this.maxHeadersCount = null;\r
+      
+                  \  this.reusedSocket = false;\r
+      
+                  \  this.host = host;\r
+      
+                  \  this.protocol = protocol;\r
+      
+                  \r
+      
+                  \  if (this.agent) {\r
+      
+                  \    // If there is an agent we should default to
+                  Connection:keep-alive,\r
+      
+                  \    // but only if the Agent will actually reuse the connection!\r
+      
+                  \    // If it's not a keepAlive agent, and the maxSockets==Infinity,
+                  then\r
+      
+                  \    // there's never a case where this socket will actually be
+                  reused\r
+      
+                  \    if (!this.agent.keepAlive &&
+                  !NumberIsFinite(this.agent.maxSockets)) {\r
+      
+                  \      this._last = true;\r
+      
+                  \      this.shouldKeepAlive = false;\r
+      
+                  \    } else {\r
+      
+                  \      this._last = false;\r
+      
+                  \      this.shouldKeepAlive = true;\r
+      
+                  \    }\r
+      
+                  \  }\r
+      
+                  \r
+      
+                  \  const headersArray = ArrayIsArray(options.headers);\r
+      
+                  \  if (!headersArray) {\r
+      
+                  \    if (options.headers) {\r
+      
+                  \      const keys = ObjectKeys(options.headers);\r
+      
+                  \      // Retain for(;;) loop for performance reasons\r
+      
+                  \      // Refs: https://github.com/nodejs/node/pull/30958\r
+      
+                  \      for (let i = 0; i < keys.length; i++) {\r
+      
+                  \        const key = keys[i];\r
+      
+                  \        this.setHeader(key, options.headers[key]);\r
+      
+                  \      }\r
+      
+                  \    }\r
+      
+                  \r
+      
+                  \    if (host && !this.getHeader('host') && setHost) {\r
+      
+                  \      let hostHeader = host;\r
+      
+                  \r
+      
+                  \      // For the Host header, ensure that IPv6 addresses are
+                  enclosed\r
+      
+                  \      // in square brackets, as defined by URI formatting\r
+      
+                  \      // https://tools.ietf.org/html/rfc3986#section-3.2.2\r
+      
+                  \      const posColon = StringPrototypeIndexOf(hostHeader, ':');\r
+      
+                  \      if (posColon !== -1 &&\r
+      
+                  \          StringPrototypeIncludes(hostHeader, ':', posColon + 1)
+                  &&\r
+      
+                  \          StringPrototypeCharCodeAt(hostHeader, 0) !== 91/* '[' */)
+                  {\r
+      
+                  \        hostHeader = `[${hostHeader}]`;\r
+      
+                  \      }\r
+      
+                  \r
+      
+                  \      if (port && +port !== defaultPort) {\r
+      
+                  \        hostHeader += ':' + port;\r
+      
+                  \      }\r
+      
+                  \      this.setHeader('Host', hostHeader);\r
+      
+                  \    }\r
+      
+                  \r
+      
+                  \    if (options.auth && !this.getHeader('Authorization')) {\r
+      
+                  \      this.setHeader('Authorization', 'Basic ' +\r
+      
+                  \                     Buffer.from(options.auth).toString('base64'));\
+                  \r
+      
+                  \    }\r
+      
+                  \r
+      
+                  \    if (this.getHeader('expect')) {\r
+      
+                  \      if (this._header) {\r
+      
+                  \        throw new ERR_HTTP_HEADERS_SENT('render');\r
+      
+                  \      }\r
+      
+                  \r
+      
+                  \      this._storeHeader(this.method + ' ' + this.path + '
+                  HTTP/1.1\\r\\n',\r
+      
+                  \                        this[kOutHeaders]);\r
+      
+                  \    }\r
+      
+                  \  } else {\r
+      
+                  \    this._storeHeader(this.method + ' ' + this.path + '
+                  HTTP/1.1\\r\\n',\r
+      
+                  \                      options.headers);\r
+      
+                  \  }\r
+      
+                  \r
+      
+                  \  this[kUniqueHeaders] =
+                  parseUniqueHeadersOption(options.uniqueHeaders);\r
+      
+                  \r
+      
+                  \  // initiate connection\r
+      
+                  \  if (this.agent) {\r
+      
+                  \    this.agent.addRequest(this, optsWithoutSignal);\r
+      
+                  \  } else {\r
+      
+                  \    // No agent, default to Connection:close.\r
+      
+                  \    this._last = true;\r
+      
+                  \    this.shouldKeepAlive = false;\r
+      
+                  \    let opts = optsWithoutSignal;\r
+      
+                  \    if (opts.path || opts.socketPath) {\r
+      
+                  \      opts = { ...optsWithoutSignal };\r
+      
+                  \      if (opts.socketPath) {\r
+      
+                  \        opts.path = opts.socketPath;\r
+      
+                  \      } else if (opts.path) {\r
+      
+                  \        opts.path = undefined;\r
+      
+                  \      }\r
+      
+                  \    }\r
+      
+                  \    if (typeof opts.createConnection === 'function') {\r
+      
+                  \      const oncreate = once((err, socket) => {\r
+      
+                  \        if (err) {\r
+      
+                  \          process.nextTick(() => this.emit('error', err));\r
+      
+                  \        } else {\r
+      
+                  \          this.onSocket(socket);\r
+      
+                  \        }\r
+      
+                  \      });\r
+      
+                  \r
+      
+                  \      try {\r
+      
+                  \        const newSocket = opts.createConnection(opts, oncreate);\r
+      
+                  \        if (newSocket) {\r
+      
+                  \          oncreate(null, newSocket);\r
+      
+                  \        }\r
+      
+                  \      } catch (err) {\r
+      
+                  \        oncreate(err);\r
+      
+                  \      }\r
+      
+                  \    } else {\r
+      
+                  \      debug('CLIENT use net.createConnection', opts);\r
+      
+                  \      this.onSocket(net.createConnection(opts));\r
+      
+                  \    }\r
+      
+                  \  }\r
+      
+                  }"
+                IncomingMessage: !class "function IncomingMessage(socket) {\r
+      
+                  \  let streamOptions;\r
+      
+                  \r
+      
+                  \  if (socket) {\r
+      
+                  \    streamOptions = {\r
+      
+                  \      highWaterMark: socket.readableHighWaterMark,\r
+      
+                  \    };\r
+      
+                  \  }\r
+      
+                  \r
+      
+                  \  Readable.call(this, streamOptions);\r
+      
+                  \r
+      
+                  \  this._readableState.readingMore = true;\r
+      
+                  \r
+      
+                  \  this.socket = socket;\r
+      
+                  \r
+      
+                  \  this.httpVersionMajor = null;\r
+      
+                  \  this.httpVersionMinor = null;\r
+      
+                  \  this.httpVersion = null;\r
+      
+                  \  this.complete = false;\r
+      
+                  \  this[kHeaders] = null;\r
+      
+                  \  this[kHeadersCount] = 0;\r
+      
+                  \  this.rawHeaders = [];\r
+      
+                  \  this[kTrailers] = null;\r
+      
+                  \  this[kTrailersCount] = 0;\r
+      
+                  \  this.rawTrailers = [];\r
+      
+                  \  this.joinDuplicateHeaders = false;\r
+      
+                  \  this.aborted = false;\r
+      
+                  \r
+      
+                  \  this.upgrade = null;\r
+      
+                  \r
+      
+                  \  // request (server) only\r
+      
+                  \  this.url = '';\r
+      
+                  \  this.method = null;\r
+      
+                  \r
+      
+                  \  // response (client) only\r
+      
+                  \  this.statusCode = null;\r
+      
+                  \  this.statusMessage = null;\r
+      
+                  \  this.client = socket;\r
+      
+                  \r
+      
+                  \  this._consuming = false;\r
+      
+                  \  // Flag for when we decide that this message cannot possibly be\r
+      
+                  \  // read by the user, so there's no point continuing to handle
+                  it.\r
+      
+                  \  this._dumped = false;\r
+      
+                  }"
+                OutgoingMessage: !class "function OutgoingMessage(options) {\r
+      
+                  \  Stream.call(this);\r
+      
+                  \r
+      
+                  \  // Queue that holds all currently pending data, until the
+                  response will be\r
+      
+                  \  // assigned to the socket (until it will its turn in the HTTP
+                  pipeline).\r
+      
+                  \  this.outputData = [];\r
+      
+                  \r
+      
+                  \  // `outputSize` is an approximate measure of how much data is
+                  queued on this\r
+      
+                  \  // response. `_onPendingData` will be invoked to update similar
+                  global\r
+      
+                  \  // per-connection counter. That counter will be used to
+                  pause/unpause the\r
+      
+                  \  // TCP socket and HTTP Parser and thus handle the backpressure.\r
+      
+                  \  this.outputSize = 0;\r
+      
+                  \r
+      
+                  \  this.writable = true;\r
+      
+                  \  this.destroyed = false;\r
+      
+                  \r
+      
+                  \  this._last = false;\r
+      
+                  \  this.chunkedEncoding = false;\r
+      
+                  \  this.shouldKeepAlive = true;\r
+      
+                  \  this.maxRequestsOnConnectionReached = false;\r
+      
+                  \  this._defaultKeepAlive = true;\r
+      
+                  \  this.useChunkedEncodingByDefault = true;\r
+      
+                  \  this.sendDate = false;\r
+      
+                  \  this._removedConnection = false;\r
+      
+                  \  this._removedContLen = false;\r
+      
+                  \  this._removedTE = false;\r
+      
+                  \r
+      
+                  \  this.strictContentLength = false;\r
+      
+                  \  this[kBytesWritten] = 0;\r
+      
+                  \  this._contentLength = null;\r
+      
+                  \  this._hasBody = true;\r
+      
+                  \  this._trailer = '';\r
+      
+                  \  this[kNeedDrain] = false;\r
+      
+                  \r
+      
+                  \  this.finished = false;\r
+      
+                  \  this._headerSent = false;\r
+      
+                  \  this[kCorked] = 0;\r
+      
+                  \  this._closed = false;\r
+      
+                  \r
+      
+                  \  this.socket = null;\r
+      
+                  \  this._header = null;\r
+      
+                  \  this[kOutHeaders] = null;\r
+      
+                  \r
+      
+                  \  this._keepAliveTimeout = 0;\r
+      
+                  \r
+      
+                  \  this._onPendingData = nop;\r
+      
+                  \r
+      
+                  \  this[kErrored] = null;\r
+      
+                  \  this[kHighWaterMark] = options?.highWaterMark ??
+                  getDefaultHighWaterMark();\r
+      
+                  \  this[kRejectNonStandardBodyWrites] =
+                  options?.rejectNonStandardBodyWrites ?? false;\r
+      
+                  }"
+                Server: !class "function Server(options, requestListener) {\r
+      
+                  \  if (!(this instanceof Server)) return new Server(options,
+                  requestListener);\r
+      
+                  \r
+      
+                  \  if (typeof options === 'function') {\r
+      
+                  \    requestListener = options;\r
+      
+                  \    options = kEmptyObject;\r
+      
+                  \  } else if (options == null) {\r
+      
+                  \    options = kEmptyObject;\r
+      
+                  \  } else {\r
+      
+                  \    validateObject(options, 'options');\r
+      
+                  \  }\r
+      
+                  \r
+      
+                  \  storeHTTPOptions.call(this, options);\r
+      
+                  \  net.Server.call(\r
+      
+                  \    this,\r
+      
+                  \    { allowHalfOpen: true, noDelay: options.noDelay ?? true,\r
+      
+                  \      keepAlive: options.keepAlive,\r
+      
+                  \      keepAliveInitialDelay: options.keepAliveInitialDelay,\r
+      
+                  \      highWaterMark: options.highWaterMark });\r
+      
+                  \r
+      
+                  \  if (requestListener) {\r
+      
+                  \    this.on('request', requestListener);\r
+      
+                  \  }\r
+      
+                  \r
+      
+                  \  // Similar option to this. Too lazy to write my own docs.\r
+      
+                  \  // http://www.squid-cache.org/Doc/config/half_closed_clients/\r
+      
+                  \  //
+                  https://wiki.squid-cache.org/SquidFaq/InnerWorkings#What_is_a_half-\
+                  closed_filedescriptor.3F\r
+      
+                  \  this.httpAllowHalfOpen = false;\r
+      
+                  \r
+      
+                  \  this.on('connection', connectionListener);\r
+      
+                  \  this.on('listening', setupConnectionsTracking);\r
+      
+                  \r
+      
+                  \  this.timeout = 0;\r
+      
+                  \  this.maxHeadersCount = null;\r
+      
+                  \  this.maxRequestsPerSocket = 0;\r
+      
+                  \r
+      
+                  \  this[kUniqueHeaders] =
+                  parseUniqueHeadersOption(options.uniqueHeaders);\r
+      
+                  }"
+                ServerResponse: !class "function ServerResponse(req, options) {\r
+      
+                  \  OutgoingMessage.call(this, options);\r
+      
+                  \r
+      
+                  \  if (req.method === 'HEAD') this._hasBody = false;\r
+      
+                  \r
+      
+                  \  this.req = req;\r
+      
+                  \  this.sendDate = true;\r
+      
+                  \  this._sent100 = false;\r
+      
+                  \  this._expect_continue = false;\r
+      
+                  \r
+      
+                  \  if (req.httpVersionMajor < 1 || req.httpVersionMinor < 1) {\r
+      
+                  \    this.useChunkedEncodingByDefault =
+                  RegExpPrototypeExec(chunkExpression,\r
+      
+                  \                                                           req.hea\
+                  ders.te) !== null;\r
+      
+                  \    this.shouldKeepAlive = false;\r
+      
+                  \  }\r
+      
+                  \r
+      
+                  \  if (hasObserver('http')) {\r
+      
+                  \    startPerf(this, kServerResponseStatistics, {\r
+      
+                  \      type: 'http',\r
+      
+                  \      name: 'HttpRequest',\r
+      
+                  \      detail: {\r
+      
+                  \        req: {\r
+      
+                  \          method: req.method,\r
+      
+                  \          url: req.url,\r
+      
+                  \          headers: req.headers,\r
+      
+                  \        },\r
+      
+                  \      },\r
+      
+                  \    });\r
+      
+                  \  }\r
+      
+                  \  if (isTraceHTTPEnabled()) {\r
+      
+                  \    this._traceEventId = getNextTraceEventId();\r
+      
+                  \    traceBegin(HTTP_SERVER_TRACE_EVENT_NAME, this._traceEventId);\r
+      
+                  \  }\r
+      
+                  }"
+                createServer: !class "function createServer(opts, requestListener) {\r
+      
+                  \  return new Server(opts, requestListener);\r
+      
+                  }"
+                validateHeaderName: !class "function wrappedFn(...args) {\r
+      
+                  \    try {\r
+      
+                  \      return ReflectApply(fn, this, args);\r
+      
+                  \    } catch (error) {\r
+      
+                  \      Error.stackTraceLimit && ErrorCaptureStackTrace(error,
+                  wrappedFn);\r
+      
+                  \      throw error;\r
+      
+                  \    }\r
+      
+                  \  }"
+                validateHeaderValue: !class "function wrappedFn(...args) {\r
+      
+                  \    try {\r
+      
+                  \      return ReflectApply(fn, this, args);\r
+      
+                  \    } catch (error) {\r
+      
+                  \      Error.stackTraceLimit && ErrorCaptureStackTrace(error,
+                  wrappedFn);\r
+      
+                  \      throw error;\r
+      
+                  \    }\r
+      
+                  \  }"
+                get: !class "function get(url, options, cb) {\r
+      
+                  \  const req = request(url, options, cb);\r
+      
+                  \  req.end();\r
+      
+                  \  return req;\r
+      
+                  }"
+                request: !class "function request(url, options, cb) {\r
+      
+                  \  return new ClientRequest(url, options, cb);\r
+      
+                  }"
+                setMaxIdleHTTPParsers: !function "\"setMaxIdleHTTPParsers\"
+      
+                  setMaxIdleHTTPParsers(max) {\r
+      
+                  \    validateInteger(max, 'max', 1);\r
+      
+                  \    parsers.max = max;\r
+      
+                  \  }"
+                maxHeaderSize: 16384
+                globalAgent: *a3
+              "https:":
+                Agent: !class "function Agent(options) {\r
+      
+                  \  if (!(this instanceof Agent))\r
+      
+                  \    return new Agent(options);\r
+      
+                  \r
+      
+                  \  FunctionPrototypeCall(HttpAgent, this, options);\r
+      
+                  \  this.defaultPort = 443;\r
+      
+                  \  this.protocol = 'https:';\r
+      
+                  \  this.maxCachedSessions = this.options.maxCachedSessions;\r
+      
+                  \  if (this.maxCachedSessions === undefined)\r
+      
+                  \    this.maxCachedSessions = 100;\r
+      
+                  \r
+      
+                  \  this._sessionCache = {\r
+      
+                  \    map: {},\r
+      
+                  \    list: [],\r
+      
+                  \  };\r
+      
+                  }"
+                globalAgent:
+                  _events: !nullobject
+                    free: !function "\"\"
+      
+                      (socket, options) => {\r
+      
+                      \    const name = this.getName(options);\r
+      
+                      \    debug('agent.on(free)', name);\r
+      
+                      \r
+      
+                      \    // TODO(ronag): socket.destroy(err) might have been
+                      called\r
+      
+                      \    // before coming here and have an 'error' scheduled. In
+                      the\r
+      
+                      \    // case of socket.destroy() below this 'error' has no
+                      handler\r
+      
+                      \    // and could cause unhandled exception.\r
+      
+                      \r
+      
+                      \    if (!socket.writable) {\r
+      
+                      \      socket.destroy();\r
+      
+                      \      return;\r
+      
+                      \    }\r
+      
+                      \r
+      
+                      \    const requests = this.requests[name];\r
+      
+                      \    if (requests && requests.length) {\r
+      
+                      \      const req = ArrayPrototypeShift(requests);\r
+      
+                      \      const reqAsyncRes = req[kRequestAsyncResource];\r
+      
+                      \      if (reqAsyncRes) {\r
+      
+                      \        // Run request within the original async context.\r
+      
+                      \        reqAsyncRes.runInAsyncScope(() => {\r
+      
+                      \          asyncResetHandle(socket);\r
+      
+                      \          setRequestSocket(this, req, socket);\r
+      
+                      \        });\r
+      
+                      \        req[kRequestAsyncResource] = null;\r
+      
+                      \      } else {\r
+      
+                      \        setRequestSocket(this, req, socket);\r
+      
+                      \      }\r
+      
+                      \      if (requests.length === 0) {\r
+      
+                      \        delete this.requests[name];\r
+      
+                      \      }\r
+      
+                      \      return;\r
+      
+                      \    }\r
+      
+                      \r
+      
+                      \    // If there are no pending requests, then put it in\r
+      
+                      \    // the freeSockets pool, but only if we're allowed to do
+                      so.\r
+      
+                      \    const req = socket._httpMessage;\r
+      
+                      \    if (!req || !req.shouldKeepAlive || !this.keepAlive) {\r
+      
+                      \      socket.destroy();\r
+      
+                      \      return;\r
+      
+                      \    }\r
+      
+                      \r
+      
+                      \    const freeSockets = this.freeSockets[name] || [];\r
+      
+                      \    const freeLen = freeSockets.length;\r
+      
+                      \    let count = freeLen;\r
+      
+                      \    if (this.sockets[name])\r
+      
+                      \      count += this.sockets[name].length;\r
+      
+                      \r
+      
+                      \    if (this.totalSocketCount > this.maxTotalSockets ||\r
+      
+                      \        count > this.maxSockets ||\r
+      
+                      \        freeLen >= this.maxFreeSockets ||\r
+      
+                      \        !this.keepSocketAlive(socket)) {\r
+      
+                      \      socket.destroy();\r
+      
+                      \      return;\r
+      
+                      \    }\r
+      
+                      \r
+      
+                      \    this.freeSockets[name] = freeSockets;\r
+      
+                      \    socket[async_id_symbol] = -1;\r
+      
+                      \    socket._httpMessage = null;\r
+      
+                      \    this.removeSocket(socket, options);\r
+      
+                      \r
+      
+                      \    socket.once('error', freeSocketErrorListener);\r
+      
+                      \    ArrayPrototypePush(freeSockets, socket);\r
+      
+                      \  }"
+                    newListener: !class "function maybeEnableKeylog(eventName) {\r
+      
+                      \  if (eventName === 'keylog') {\r
+      
+                      \    this.removeListener('newListener', maybeEnableKeylog);\r
+      
+                      \    // Future sockets will listen on keylog at creation.\r
+      
+                      \    const agent = this;\r
+      
+                      \    this[kOnKeylog] = function onkeylog(keylog) {\r
+      
+                      \      agent.emit('keylog', keylog, this);\r
+      
+                      \    };\r
+      
+                      \    // Existing sockets will start listening on keylog now.\r
+      
+                      \    const sockets = ObjectValues(this.sockets);\r
+      
+                      \    for (let i = 0; i < sockets.length; i++) {\r
+      
+                      \      sockets[i].on('keylog', this[kOnKeylog]);\r
+      
+                      \    }\r
+      
+                      \  }\r
+      
+                      }"
+                  _eventsCount: 2
+                  defaultPort: 443
+                  protocol: "https:"
+                  options: !nullobject
+                    keepAlive: true
+                    scheduling: lifo
+                    timeout: 5000
+                    noDelay: true
+                    path: null
+                  requests: !nullobject {}
+                  sockets: !nullobject {}
+                  freeSockets: !nullobject {}
+                  keepAliveMsecs: 1000
+                  keepAlive: true
+                  maxSockets: .inf
+                  maxFreeSockets: 256
+                  scheduling: lifo
+                  maxTotalSockets: .inf
+                  totalSocketCount: 0
+                  maxCachedSessions: 100
+                  _sessionCache:
+                    map: {}
+                    list: []
+                Server: !class "function Server(opts, requestListener) {\r
+      
+                  \  if (!(this instanceof Server)) return new Server(opts,
+                  requestListener);\r
+      
+                  \r
+      
+                  \  if (typeof opts === 'function') {\r
+      
+                  \    requestListener = opts;\r
+      
+                  \    opts = kEmptyObject;\r
+      
+                  \  } else if (opts == null) {\r
+      
+                  \    opts = kEmptyObject;\r
+      
+                  \  } else {\r
+      
+                  \    validateObject(opts, 'options');\r
+      
+                  \  }\r
+      
+                  \r
+      
+                  \  FunctionPrototypeCall(storeHTTPOptions, this, opts);\r
+      
+                  \  FunctionPrototypeCall(tls.Server, this,\r
+      
+                  \                        {\r
+      
+                  \                          noDelay: true,\r
+      
+                  \                          // http/1.0 is not defined as Protocol
+                  IDs in IANA\r
+      
+                  \                          //
+                  https://www.iana.org/assignments/tls-extensiontype-values\r
+      
+                  \                          //       /tls-extensiontype-values.xhtml\
+                  #alpn-protocol-ids\r
+      
+                  \                          ALPNProtocols: ['http/1.1'],\r
+      
+                  \                          ...opts,\r
+      
+                  \                        },\r
+      
+                  \                        _connectionListener);\r
+      
+                  \r
+      
+                  \  this.httpAllowHalfOpen = false;\r
+      
+                  \r
+      
+                  \  if (requestListener) {\r
+      
+                  \    this.addListener('request', requestListener);\r
+      
+                  \  }\r
+      
+                  \r
+      
+                  \  this.addListener('tlsClientError', function addListener(err,
+                  conn) {\r
+      
+                  \    if (!this.emit('clientError', err, conn))\r
+      
+                  \      conn.destroy(err);\r
+      
+                  \  });\r
+      
+                  \r
+      
+                  \  this.timeout = 0;\r
+      
+                  \  this.maxHeadersCount = null;\r
+      
+                  \  this.on('listening', setupConnectionsTracking);\r
+      
+                  }"
+                createServer: !class "function createServer(opts, requestListener) {\r
+      
+                  \  return new Server(opts, requestListener);\r
+      
+                  }"
+                get: !class "function get(input, options, cb) {\r
+      
+                  \  const req = request(input, options, cb);\r
+      
+                  \  req.end();\r
+      
+                  \  return req;\r
+      
+                  }"
+                request: !class "function request(...args) {\r
+      
+                  \  let options = {};\r
+      
+                  \r
+      
+                  \  if (typeof args[0] === 'string') {\r
+      
+                  \    const urlStr = ArrayPrototypeShift(args);\r
+      
+                  \    options = urlToHttpOptions(new URL(urlStr));\r
+      
+                  \  } else if (isURL(args[0])) {\r
+      
+                  \    options = urlToHttpOptions(ArrayPrototypeShift(args));\r
+      
+                  \  }\r
+      
+                  \r
+      
+                  \  if (args[0] && typeof args[0] !== 'function') {\r
+      
+                  \    ObjectAssign(options, ArrayPrototypeShift(args));\r
+      
+                  \  }\r
+      
+                  \r
+      
+                  \  options._defaultAgent = module.exports.globalAgent;\r
+      
+                  \  ArrayPrototypeUnshift(args, options);\r
+      
+                  \r
+      
+                  \  return ReflectConstruct(ClientRequest, args);\r
+      
+                  }"
+            pathname: /users/21
+          _ended: true
+          _ending: true
+          _redirectCount: 0
+          _redirects: *a4
+          _requestBodyLength: 0
+          _requestBodyBuffers: []
+          _eventsCount: 3
+          _onNativeResponse: !class |-
+            function (response) {
+                try {
+                  self._processResponse(response);
+                }
+                catch (cause) {
+                  self.emit("error", cause instanceof RedirectionError ?
+                    cause : new RedirectionError({ cause: cause }));
+                }
+              }
+          _currentRequest: *a2
+          _currentUrl: http://localhost:3000/users/21
+      response:
+        status: 401
+        statusText: Unauthorized
+        headers:
+          access-control-allow-origin: "*"
+          content-type: application/json; charset=utf-8
+          content-length: "154"
+          date: Wed, 07 Aug 2024 05:54:33 GMT
+          connection: keep-alive
+          keep-alive: timeout=72
+        config: *a5
+        request: *a2
+        data:
+          statusCode: 401
+          code: FST_JWT_AUTHORIZATION_TOKEN_INVALID
+          error: Unauthorized
+          message: "Authorization token is invalid: The token is malformed."
+      tapCaught: returnedPromiseRejection
+      source: >2
+            resolve(response);
+          } else {
+            reject(new AxiosError(
+        -----------^
+              'Request failed with status code ' + response.status,
+              [AxiosError.ERR_BAD_REQUEST, AxiosError.ERR_BAD_RESPONSE][Math.floor(response.status / 100) - 4],
+      ...
+    
+    1..4
+not ok 1 - User API Tests # time=497.928ms
+  ---
+  at:
+    fileName: test\auth.test.js
+    lineNumber: 81
+    columnNumber: 5
+    isToplevel: true
+  source: "}\r
+  
+    \r
+  
+    tap.test('User API Tests', async (t) => {\r
+  
+    ----^
+  
+    \  // Test Registration\r
+  
+    \  const { response, username } = await testRegister();\n"
+  ...
+
+1..1

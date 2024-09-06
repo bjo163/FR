@@ -1,0 +1,20 @@
+# Mengabaikan file lingkungan seperti .env
+.env
+
+# Mengabaikan folder node_modules
+node_modules/
+
+# Mengabaikan log file
+*.log
+
+# Mengabaikan file cache atau sementara
+*.tmp
+*.cache
+
+# Mengabaikan file build
+dist/
+build/
+
+# Mengabaikan file konfigurasi sistem
+.DS_Store
+

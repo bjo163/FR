@@ -1,0 +1,340 @@
+TAP version 14
+# Subtest: API Endpoints
+    # Subtest: POST /register - success
+        not ok 1 - POST /register failed: Request failed with status code 500
+          ---
+          at:
+            fileName: tests\api.test.js
+            lineNumber: 37
+            columnNumber: 9
+            typeName: Test
+          stack: |
+            Test.<anonymous> (tests/api.test.js:37:9)
+          source: "      userId = data.user.id; // Save userId for further tests\r
+          
+            \    } catch (error) {\r
+          
+            \      t.fail(`POST /register failed: ${error.message}`);\r
+          
+            --------^
+          
+            \    }\r
+          
+            \  });\n"
+          ...
+        
+        1..1
+    not ok 1 - POST /register - success # time=136.82ms
+      ---
+      at:
+        fileName: tests\api.test.js
+        lineNumber: 22
+        columnNumber: 5
+        typeName: Test
+      source: "  });\r
+      
+        \r
+      
+        \  t.test('POST /register - success', async (t) => {\r
+      
+        ----^
+      
+        \    try {\r
+      
+        \      const response = await axios.post(apiUrl('/register'), {\n"
+      ...
+    
+    # Subtest: POST /login - success
+        not ok 1 - POST /login failed: Request failed with status code 401
+          ---
+          at:
+            fileName: tests\api.test.js
+            lineNumber: 55
+            columnNumber: 9
+            typeName: Test
+          stack: |
+            Test.<anonymous> (tests/api.test.js:55:9)
+          source: "      authToken = data.token; // Save authToken for authenticated
+            routes\r
+          
+            \    } catch (error) {\r
+          
+            \      t.fail(`POST /login failed: ${error.message}`);\r
+          
+            --------^
+          
+            \    }\r
+          
+            \  });\n"
+          ...
+        
+        1..1
+    not ok 2 - POST /login - success # time=13.517ms
+      ---
+      at:
+        fileName: tests\api.test.js
+        lineNumber: 41
+        columnNumber: 5
+        typeName: Test
+      source: "  });\r
+      
+        \r
+      
+        \  t.test('POST /login - success', async (t) => {\r
+      
+        ----^
+      
+        \    try {\r
+      
+        \      const response = await axios.post(apiUrl('/login'), {\n"
+      ...
+    
+    # Subtest: GET /users/:id - success
+        not ok 1 - GET /users/:id failed: Request failed with status code 500
+          ---
+          at:
+            fileName: tests\api.test.js
+            lineNumber: 70
+            columnNumber: 9
+            typeName: Test
+          stack: |
+            Test.<anonymous> (tests/api.test.js:70:9)
+          source: "      t.match(data, { username: 'newuser' });\r
+          
+            \    } catch (error) {\r
+          
+            \      t.fail(`GET /users/:id failed: ${error.message}`);\r
+          
+            --------^
+          
+            \    }\r
+          
+            \  });\n"
+          ...
+        
+        1..1
+    not ok 3 - GET /users/:id - success # time=10.101ms
+      ---
+      at:
+        fileName: tests\api.test.js
+        lineNumber: 59
+        columnNumber: 5
+        typeName: Test
+      source: "  });\r
+      
+        \r
+      
+        \  t.test('GET /users/:id - success', async (t) => {\r
+      
+        ----^
+      
+        \    try {\r
+      
+        \      const response = await axios.get(apiUrl(`/users/${userId}`), {\n"
+      ...
+    
+    # Subtest: PUT /users/:id - success
+        not ok 1 - PUT /users/:id failed: Request failed with status code 500
+          ---
+          at:
+            fileName: tests\api.test.js
+            lineNumber: 87
+            columnNumber: 9
+            typeName: Test
+          stack: |
+            Test.<anonymous> (tests/api.test.js:87:9)
+          source: "      t.match(data, { message: 'User updated successfully' });\r
+          
+            \    } catch (error) {\r
+          
+            \      t.fail(`PUT /users/:id failed: ${error.message}`);\r
+          
+            --------^
+          
+            \    }\r
+          
+            \  });\n"
+          ...
+        
+        1..1
+    not ok 4 - PUT /users/:id - success # time=8.269ms
+      ---
+      at:
+        fileName: tests\api.test.js
+        lineNumber: 74
+        columnNumber: 5
+        typeName: Test
+      source: "  });\r
+      
+        \r
+      
+        \  t.test('PUT /users/:id - success', async (t) => {\r
+      
+        ----^
+      
+        \    try {\r
+      
+        \      const response = await axios.put(apiUrl(`/users/${userId}`), {\n"
+      ...
+    
+    # Subtest: DELETE /users/:id - success
+        not ok 1 - DELETE /users/:id failed: Request failed with status code 500
+          ---
+          at:
+            fileName: tests\api.test.js
+            lineNumber: 99
+            columnNumber: 9
+            typeName: Test
+          stack: |
+            Test.<anonymous> (tests/api.test.js:99:9)
+          source: "      t.equal(response.status, 204);\r
+          
+            \    } catch (error) {\r
+          
+            \      t.fail(`DELETE /users/:id failed: ${error.message}`);\r
+          
+            --------^
+          
+            \    }\r
+          
+            \  });\n"
+          ...
+        
+        1..1
+    not ok 5 - DELETE /users/:id - success # time=8.495ms
+      ---
+      at:
+        fileName: tests\api.test.js
+        lineNumber: 91
+        columnNumber: 5
+        typeName: Test
+      source: "  });\r
+      
+        \r
+      
+        \  t.test('DELETE /users/:id - success', async (t) => {\r
+      
+        ----^
+      
+        \    try {\r
+      
+        \      const response = await axios.delete(apiUrl(`/users/${userId}`), {\n"
+      ...
+    
+    # Subtest: GET /protected - unauthorized
+        not ok 1 - should be equal
+          ---
+          compare: ===
+          at:
+            fileName: tests\api.test.js
+            lineNumber: 109
+            columnNumber: 9
+            typeName: Test
+          stack: |
+            Test.<anonymous> (tests/api.test.js:109:9)
+          source: "      t.equal(response.status, 401);\r
+          
+            \    } catch (error) {\r
+          
+            \      t.equal(error.response.status, 401);\r
+          
+            --------^
+          
+            \    }\r
+          
+            \  });\n"
+          diff: |
+            --- expected
+            +++ actual
+            @@ -1,1 +1,1 @@
+            -401
+            +500
+          ...
+        
+        1..1
+    not ok 6 - GET /protected - unauthorized # time=16.113ms
+      ---
+      at:
+        fileName: tests\api.test.js
+        lineNumber: 103
+        columnNumber: 5
+        typeName: Test
+      source: "  });\r
+      
+        \r
+      
+        \  t.test('GET /protected - unauthorized', async (t) => {\r
+      
+        ----^
+      
+        \    try {\r
+      
+        \      const response = await axios.get(apiUrl('/protected'));\n"
+      ...
+    
+    # Subtest: GET /protected - authorized
+        not ok 1 - GET /protected - authorized failed: Request failed with status code 500
+          ---
+          at:
+            fileName: tests\api.test.js
+            lineNumber: 124
+            columnNumber: 9
+            typeName: Test
+          stack: |
+            Test.<anonymous> (tests/api.test.js:124:9)
+          source: "      t.match(data, { message: 'This is a protected route' });\r
+          
+            \    } catch (error) {\r
+          
+            \      t.fail(`GET /protected - authorized failed: ${error.message}`);\r
+          
+            --------^
+          
+            \    }\r
+          
+            \  });\n"
+          ...
+        
+        1..1
+    not ok 7 - GET /protected - authorized # time=12.561ms
+      ---
+      at:
+        fileName: tests\api.test.js
+        lineNumber: 113
+        columnNumber: 5
+        typeName: Test
+      source: "  });\r
+      
+        \r
+      
+        \  t.test('GET /protected - authorized', async (t) => {\r
+      
+        ----^
+      
+        \    try {\r
+      
+        \      const response = await axios.get(apiUrl('/protected'), {\n"
+      ...
+    
+    1..7
+not ok 1 - API Endpoints # time=239.21ms
+  ---
+  at:
+    fileName: tests\api.test.js
+    lineNumber: 10
+    columnNumber: 5
+    isToplevel: true
+  source: "const apiUrl = (endpoint) => `http://localhost:${port}${endpoint}`;\r
+  
+    \r
+  
+    tap.test('API Endpoints', async (t) => {\r
+  
+    ----^
+  
+    \  let userId = null;\r
+  
+    \  let authToken = null;\n"
+  ...
+
+1..1

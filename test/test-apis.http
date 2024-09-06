@@ -1,0 +1,31 @@
+### Test POST /register
+POST http://localhost:3000/register
+Content-Type: application/json
+
+{
+  "username": "xx",
+  "password": "2104981",
+  "role": "user"
+}
+### Test POST /login
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+  "username": "xx",
+  "password": "2104981"
+}
+### Test GET /users/:id
+GET http://localhost:3000/users/1
+
+### Test GET /users/invalid-id
+GET http://localhost:3000/users/99999
+
+### Test GET /SendMessage
+POST http://localhost:3000/send
+Content-Type: application/json
+
+{
+  "message": "hai!",
+  "format": "json"
+}

@@ -1,0 +1,13 @@
+2024/09/01-04:24:27.296 3dfb14 Reusing MANIFEST /opt/AI/FR/tokens/session-name/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2024/09/01-04:24:27.297 3dfb14 Recovering log #854
+2024/09/01-04:24:27.301 3dfb14 Reusing old log /opt/AI/FR/tokens/session-name/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000854.log 
+2024/09/01-04:24:28.250 3dfb1a Level-0 table #859: started
+2024/09/01-04:24:28.262 3dfb1a Level-0 table #859: 41062 bytes OK
+2024/09/01-04:24:28.270 3dfb1a Delete type=0 #854
+2024/09/01-04:24:28.270 3dfb14 Manual compaction at level-0 from '\x00\xe6\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\xe7\x00\x00\x00' @ 0 : 0; will stop at '\x00\xe6\x0a\x02\x03\x00\x00\x00\x00\x00\x00\xf0?' @ 251432 : 1
+2024/09/01-04:24:28.270 3dfb14 Compacting 1@0 + 1@1 files
+2024/09/01-04:24:28.289 3dfb14 Generated table #860@0: 3359 keys, 28217 bytes
+2024/09/01-04:24:28.289 3dfb14 Compacted 1@0 + 1@1 files => 28217 bytes
+2024/09/01-04:24:28.295 3dfb14 compacted to: files[ 0 1 1 0 0 0 0 ]
+2024/09/01-04:24:28.296 3dfb14 Delete type=2 #859
+2024/09/01-04:24:28.296 3dfb1a Manual compaction at level-0 from '\x00\xe6\x0a\x02\x03\x00\x00\x00\x00\x00\x00\xf0?' @ 251432 : 1 .. '\x00\xe7\x00\x00\x00' @ 0 : 0; will stop at (end)

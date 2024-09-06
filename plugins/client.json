@@ -1,0 +1,11 @@
+{
+  "clients": [
+    "X10",
+    "X11"
+  ],
+  "qrCodes": {},
+  "readyStatus": {
+    "X10": true,
+    "X11": true
+  }
+}
