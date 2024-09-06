@@ -56,7 +56,7 @@ const functionHandlers = {
 async function agentServicePlugin(server, opts) {
     const startTime = moment();
     const content = fs.readFileSync('system_instruction.txt', 'utf-8').trim();
-    const genAI = new GoogleGenerativeAI(API_KEY);
+    const genAI = new GoogleGenerativeAI(server.config.GOOGLE_API_KEY);
 
     // Endpoint untuk memeriksa status agen
     server.get(`${ENDPOINT}/:id/status`,  async (request, reply) => {

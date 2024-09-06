@@ -15,7 +15,7 @@ Do not be destructive or do anything that would get the owner of the system into
 Have fun!
 `;
 const MODEL_NAME = "gemini-1.5-flash";
-const API_KEY = "AIzaSyCQGem2-sBVKv3tv0cAq5VQi6Z0EuMbi6s";
+// const API_KEY = "AIzaSyCQGem2-sBVKv3tv0cAq5VQi6Z0EuMbi6s";
 import { exec } from 'child_process';
 import util from 'util';
 
@@ -48,7 +48,7 @@ const commandStart = "<|START_COMMAND_TOKEN|>";
 const commandEnd = "<|END_COMMAND_TOKEN|>";
 async function aiService(server, opts) {
     // const content = fs.readFileSync('system_instruction.txt', 'utf-8').trim();
-    const genAI = new GoogleGenerativeAI(API_KEY);
+    const genAI = new GoogleGenerativeAI(server.config.GOOGLE_API_KEY);
 
     const model = genAI.getGenerativeModel({
         model: MODEL_NAME,

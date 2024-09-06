@@ -1,4 +1,4 @@
-import path from 'path';
+  import path from 'path';
 import { fileURLToPath } from 'url';
 import chalk from 'chalk';
 import ora from 'ora';
@@ -12,6 +12,7 @@ import fastifyPrintRoutes from 'fastify-print-routes';
 import { randomBytes } from 'crypto';
 import fastJson from 'fast-json-stringify';
 import fileUtilsPlugin from './core/fileUtils.js'; // Sesuaikan dengan path yang benar
+import envPlugin from "./core/env.js";
 //Bot Wa
 
 // Dapatkan __dirname dengan menggunakan import.meta.url
@@ -22,8 +23,7 @@ const __dirname = path.dirname(__filename);
 
 async function main(dev) {
 
-
-  // Jika secret tidak ada atau perlu diupdate
+  
 
   const server = Fastify({
     bodyLimit: 10485760,
@@ -34,7 +34,7 @@ async function main(dev) {
     }
   });
 
-
+  await server.register(envPlugin);
   await server.register(fileUtilsPlugin);
 
   // Register fastifyPrintRoutes plugin to log all routes
